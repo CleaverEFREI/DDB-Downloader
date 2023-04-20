@@ -1,5 +1,4 @@
 import os 
-from tqdm.asyncio import tqdm as tqdm_async
 
 class Colored:
     def __init__(self, print_bool=True):
@@ -39,11 +38,12 @@ def check_categorie(categories):
     return category
 
 #Télécharge les json de la catégorie
-async def download_json_async(session, url, nb_element_max, donnees):
-    for i in tqdm_async(range(50, nb_element_max, 50)):
-        async with session.get(url + str(i)) as response:
-            response_json = await response.json()
-            donnees["data"] = donnees["data"] + response_json["data"]
+async def download_json_async(session, url, nb_element_max, donnees, semaphore):
+    async with semaphore:
+        for i in range(50, nb_element_max, 50):
+            async with session.get(url + str(i)) as response:
+                response_json = await response.json()
+                donnees["data"] = donnees["data"] + response_json["data"]
     donnees.pop("skip")
     donnees.pop("limit")
     return donnees
