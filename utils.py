@@ -50,6 +50,7 @@ async def download_json_async(session, url, nb_element_max, donnees, semaphore):
 
 #affiche un message de fin
 def message_fin(len_finaljson, category, compteur_all_categorie=0):
+
     colored = Colored()
     colored.ok("The operation was successful.")
 
